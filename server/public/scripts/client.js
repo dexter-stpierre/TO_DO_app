@@ -11,6 +11,7 @@ function addNewTask(task){
   newTask.completeBy = $('#completeBy').val();
   console.log(newTask);
   $('#newTask').val("");
+  $('#completeBy').val("");
   $.ajax({
     type: "POST",
     url: '/tasks',
@@ -57,11 +58,12 @@ function appendToDom(listOfTasks){
     var task = listOfTasks[i];
     var d = new Date(task.complete_by);
     var completeBy = d.toDateString();
+    var today = new Date();
     if(task.complete == false){
-      var $tr = $("<tr class='incomplete'></tr>")
+      var $tr = $("<tr class='incomplete "+ task.id + task.task_name + "'></tr>")
     }
     else if (task.complete == true){
-      var $tr = $("<tr class='complete'></tr>")
+      var $tr = $("<tr class='complete "+ task.id + task.task_name + "'></tr>")
     }
     console.log(task.task_name)
     $tr.append("<td class='name'>" + task.task_name + "</td>")
@@ -70,6 +72,12 @@ function appendToDom(listOfTasks){
     }
     else if(task.complete == false){
       $tr.append("<td>No</td>")
+    }
+    if(today > d){
+      $("." + task.id + task.task_name).addClass("critical");
+    }
+    else if(today = d){
+      $("." + task.id + task.task_name).addClass("doToday")
     }
     $tr.append("<td>" + completeBy + "</td>")
     $tr.append("<td><button class='completeBtn' data-id='" + task.id + "'>Task Completed</button></td>")
