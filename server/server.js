@@ -14,6 +14,7 @@ var config = {
 };
 var pool = new pg.Pool(config);
 
+//delete task
 app.delete('/tasks/:id', function(req, res){
   pool.connect(function(errorConnectingToDatabase, db, done){
     if(errorConnectingToDatabase) {
@@ -37,6 +38,7 @@ app.delete('/tasks/:id', function(req, res){
   }); // end pool
 })
 
+//set task to complete
 app.put('/tasks/:id', function(req, res){
   pool.connect(function(errorConnectingToDatabase, db, done){
     if(errorConnectingToDatabase) {
@@ -60,6 +62,7 @@ app.put('/tasks/:id', function(req, res){
   }); // end pool
 })
 
+//retrieve tasks
 app.get('/tasks', function(req, res){
   console.log('request recieved');
   pool.connect(function(errorConnectingToDatabase, db, done){
@@ -84,11 +87,14 @@ app.get('/tasks', function(req, res){
   //res.send('recieved');
 })
 
+//add new task
 app.post('/tasks', function(req, res){
   console.log('Task recieved');
-  var newTask = req.body.newTask;
+  var newTask = req.body;
+  console.log(newTask);
   var name = newTask.name;
   var by = newTask.completeBy;
+  console.log(name, by);
   console.log(newTask);
   pool.connect(function(errorConnectingToDatabase, db, done){
     if(errorConnectingToDatabase) {
@@ -112,11 +118,13 @@ app.post('/tasks', function(req, res){
   }); // end pool
 })
 
+//serve static files
 app.get('/*', function(req, res){
   var file = req.params[0] || '/views/index.html';
   res.sendFile(path.join(__dirname, '/public/', file));
 });
 
+//listen on port
 app.listen(port, function(){
   console.log('listening on port ' + port);
 });
