@@ -11,10 +11,11 @@ function addNewTask(task){
   $('#newTask').val("");
   $.ajax({
     type: "POST",
-    url: '/addTask',
+    url: '/tasks',
     data: {newTask: newTask},
     success: function(response){
       console.log('new task added');
+      refreshTasks();
     }
   })
 }
@@ -23,6 +24,10 @@ function addClickListeners(){
   $("#submit").on('click', function(){
     console.log('submit button clicked');
     addNewTask();
+  })
+  $("#tasks").on('click', '.complete', function(){
+    var id = $(this).data("id");
+    completeTask(id);
   })
 }
 
@@ -38,6 +43,7 @@ function refreshTasks(){
 }
 
 function appendToDom(listOfTasks){
+  $("#tasks").empty();
   //console.log(listOfTasks[3].complete);
   for(var i = 0; i < listOfTasks.length; i++){
     var task = listOfTasks[i];
@@ -49,8 +55,27 @@ function appendToDom(listOfTasks){
       var $tr = $("<tr class='complete'></tr>")
     }
     console.log(task.task_name)
-    $tr.append("<td data-id=" + task.id + ">" + task.task_name + "</td>")
+    $tr.append("<td class='name'>" + task.task_name + "</td>")
+    if(task.complete == true){
+      $tr.append("<td>Yes</td>")
+    }
+    else if(task.complete == false){
+      $tr.append("<td>No</td>")
+    }
+    $tr.append("<td><button class='complete' data-id='" + task.id + "'>Task Completed</button></td>")
+    $tr.append("<td><button class='delete' data-id='" + task.id + "'>Delete</button></td>")
     $('#tasks').append($tr);
 
   }
+}
+
+function completeTask(id){
+  console.log(id);
+  $.ajax({
+    type: "PUT",
+    url: '/tasks/' + id,
+    success: function(response){
+      refreshTasks();
+    }
+  })
 }

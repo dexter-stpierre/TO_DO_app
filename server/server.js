@@ -14,6 +14,29 @@ var config = {
 };
 var pool = new pg.Pool(config);
 
+app.put('/tasks/:id', function(req, res){
+  pool.connect(function(errorConnectingToDatabase, db, done){
+    if(errorConnectingToDatabase) {
+      console.log('Error connecting to the database.');
+      res.sendStatus(500);
+    } else {
+      var id = req.params.id;
+      var queryText = 'UPDATE "tasks" SET "complete" = true WHERE "id" = $1;';
+      db.query(queryText, [id], function(errorMakingQuery, result){
+        done();
+        if(errorMakingQuery) {
+          console.log('Attempted to query with', queryText);
+          console.log('Error making query');
+          res.sendStatus(500);
+        } else {
+          //console.log(queryText);
+          res.send({tasks: result.rows});
+        }
+      }); // end query
+    } // end if
+  }); // end pool
+})
+
 app.get('/tasks', function(req, res){
   console.log('request recieved');
   pool.connect(function(errorConnectingToDatabase, db, done){
@@ -38,7 +61,7 @@ app.get('/tasks', function(req, res){
   //res.send('recieved');
 })
 
-app.post('/addTask', function(req, res){
+app.post('/tasks', function(req, res){
   console.log('Task recieved');
   var newTask = req.body.newTask;
   console.log(newTask);
