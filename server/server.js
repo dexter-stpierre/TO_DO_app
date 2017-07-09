@@ -87,6 +87,8 @@ app.get('/tasks', function(req, res){
 app.post('/tasks', function(req, res){
   console.log('Task recieved');
   var newTask = req.body.newTask;
+  var name = newTask.name;
+  var by = newTask.completeBy;
   console.log(newTask);
   pool.connect(function(errorConnectingToDatabase, db, done){
     if(errorConnectingToDatabase) {
@@ -94,8 +96,8 @@ app.post('/tasks', function(req, res){
       res.sendStatus(500);
     } else {
       var queryText = 'INSERT INTO "tasks" ' +
-      '("task_name", "complete") VALUES ($1, \'false\');';
-      db.query(queryText,[newTask], function(errorMakingQuery, result){
+      '("task_name", "complete", complete_by) VALUES ($1, \'false\', $2);';
+      db.query(queryText,[name, by], function(errorMakingQuery, result){
         done();
         if(errorMakingQuery) {
           console.log('Attempted to query with', queryText);

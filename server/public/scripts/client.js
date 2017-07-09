@@ -6,7 +6,9 @@ $(document).ready(function(){
 })//end document readt
 
 function addNewTask(task){
-  var newTask = $('#newTask').val();
+  var newTask = {}
+  newTask.name = $('#newTask').val();
+  newTask.completeBy = $('#completeBy').val();
   console.log(newTask);
   $('#newTask').val("");
   $.ajax({
@@ -25,12 +27,13 @@ function addClickListeners(){
     console.log('submit button clicked');
     addNewTask();
   })
-  $("#tasks").on('click', '.complete', function(){
+  $("#tasks").on('click', '.completeBtn', function(){
     var id = $(this).data("id");
+    console.log("clicked complete btn");
     completeTask(id);
   })
 
-  $('#tasks').on('click', '.delete', function(){
+  $('#tasks').on('click', '.deleteBtn', function(){
     var id = $(this).data("id");
     deleteTask(id);
   })
@@ -52,7 +55,8 @@ function appendToDom(listOfTasks){
   //console.log(listOfTasks[3].complete);
   for(var i = 0; i < listOfTasks.length; i++){
     var task = listOfTasks[i];
-    console.log(task.complete);
+    var d = new Date(task.complete_by);
+    var completeBy = d.toDateString();
     if(task.complete == false){
       var $tr = $("<tr class='incomplete'></tr>")
     }
@@ -67,8 +71,9 @@ function appendToDom(listOfTasks){
     else if(task.complete == false){
       $tr.append("<td>No</td>")
     }
-    $tr.append("<td><button class='complete' data-id='" + task.id + "'>Task Completed</button></td>")
-    $tr.append("<td><button class='delete' data-id='" + task.id + "'>Delete</button></td>")
+    $tr.append("<td>" + completeBy + "</td>")
+    $tr.append("<td><button class='completeBtn' data-id='" + task.id + "'>Task Completed</button></td>")
+    $tr.append("<td><button class='deleteBtn' data-id='" + task.id + "'>Delete</button></td>")
     $('#tasks').append($tr);
 
   }
