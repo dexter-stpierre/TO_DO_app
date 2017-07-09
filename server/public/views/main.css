@@ -1,0 +1,46 @@
+html body{
+  margin: 0;
+  padding: 0;
+}
+
+#container{
+  padding: 10px;
+  margin: 0;
+  width: 100%;
+}
+
+th{
+  border-bottom: 1px solid black;
+}
+
+.center{
+  text-align: center;
+}
+
+table{
+  border: 1px solid black;
+  width: 80%;
+  height: auto;
+  margin: 0 auto;
+}
+
+input{
+  margin-bottom: 10px;
+  float: left;
+}
+
+.complete{
+  text-decoration: line-through;
+}
+
+.overdue{
+  background: red;
+}
+
+.doToday{
+  background: yellow;
+}
+
+.complete{
+  background: lightgreen;
+}

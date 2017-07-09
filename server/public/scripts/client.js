@@ -36,7 +36,9 @@ function addClickListeners(){
 
   $('#tasks').on('click', '.deleteBtn', function(){
     var id = $(this).data("id");
-    deleteTask(id);
+    var answer = confirm("are you sure you want to delete this task?")
+    console.log(answer)
+    if(answer == true){deleteTask(id);}
   })
 }
 
@@ -58,7 +60,9 @@ function appendToDom(listOfTasks){
     var task = listOfTasks[i];
     var d = new Date(task.complete_by);
     var completeBy = d.toDateString();
-    var today = new Date();
+    var comp = Date.parse(completeBy);
+    var t = new Date();
+    var today = Date.parse(t.toDateString());
     if(task.complete == false){
       var $tr = $("<tr class='incomplete "+ task.id + task.task_name + "'></tr>")
     }
@@ -67,23 +71,27 @@ function appendToDom(listOfTasks){
     }
     console.log(task.task_name)
     $tr.append("<td class='name'>" + task.task_name + "</td>")
+    console.log(today);
+    console.log(comp);
+    if(today == comp){
+      $tr.addClass("doToday");
+    }
+    else if(today > comp){
+      $tr.addClass("overdue")
+    }
+    $tr.append("<td>" + completeBy + "</td>");
     if(task.complete == true){
-      $tr.append("<td>Yes</td>")
+      $tr.append("<td class='center'>Yes</td>");
+      $tr.append("<td></td>")
+      $tr.removeClass('doToday overdue')
+      //$tr.removeClass('overdue')
     }
     else if(task.complete == false){
-      $tr.append("<td>No</td>")
+      $tr.append("<td class='center'>No</td>");
+      $tr.append("<td class='center'><button class='completeBtn' data-id='" + task.id + "'>Task Completed</button></td>")
     }
-    if(today > d){
-      $("." + task.id + task.task_name).addClass("critical");
-    }
-    else if(today = d){
-      $("." + task.id + task.task_name).addClass("doToday")
-    }
-    $tr.append("<td>" + completeBy + "</td>")
-    $tr.append("<td><button class='completeBtn' data-id='" + task.id + "'>Task Completed</button></td>")
-    $tr.append("<td><button class='deleteBtn' data-id='" + task.id + "'>Delete</button></td>")
+    $tr.append("<td class='center'><button class='deleteBtn' data-id='" + task.id + "'>Delete</button></td>")
     $('#tasks').append($tr);
-
   }
 }
 
