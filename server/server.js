@@ -14,6 +14,29 @@ var config = {
 };
 var pool = new pg.Pool(config);
 
+app.delete('/tasks/:id', function(req, res){
+  pool.connect(function(errorConnectingToDatabase, db, done){
+    if(errorConnectingToDatabase) {
+      console.log('Error connecting to the database.');
+      res.sendStatus(500);
+    } else {
+      var id = req.params.id;
+      var queryText = 'DELETE FROM "tasks" WHERE "id" = $1;';
+      db.query(queryText, [id], function(errorMakingQuery, result){
+        done();
+        if(errorMakingQuery) {
+          console.log('Attempted to query with', queryText);
+          console.log('Error making query');
+          res.sendStatus(500);
+        } else {
+          //console.log(queryText);
+          res.send({tasks: result.rows});
+        }
+      }); // end query
+    } // end if
+  }); // end pool
+})
+
 app.put('/tasks/:id', function(req, res){
   pool.connect(function(errorConnectingToDatabase, db, done){
     if(errorConnectingToDatabase) {

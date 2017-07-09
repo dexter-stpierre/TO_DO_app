@@ -29,6 +29,11 @@ function addClickListeners(){
     var id = $(this).data("id");
     completeTask(id);
   })
+
+  $('#tasks').on('click', '.delete', function(){
+    var id = $(this).data("id");
+    deleteTask(id);
+  })
 }
 
 function refreshTasks(){
@@ -74,6 +79,17 @@ function completeTask(id){
   $.ajax({
     type: "PUT",
     url: '/tasks/' + id,
+    success: function(response){
+      refreshTasks();
+    }
+  })
+}
+
+function deleteTask(id){
+  console.log(id);
+  $.ajax({
+    type: "DELETE",
+    url: "/tasks/" + id,
     success: function(response){
       refreshTasks();
     }
