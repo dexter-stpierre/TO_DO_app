@@ -21,7 +21,7 @@ app.get('/tasks', function(req, res){
       console.log('Error connecting to the database.');
       res.sendStatus(500);
     } else {
-      var queryText = 'SELECT "task_name" FROM "tasks";';
+      var queryText = 'SELECT * FROM "tasks";';
       db.query(queryText, function(errorMakingQuery, result){
         done();
         if(errorMakingQuery) {
