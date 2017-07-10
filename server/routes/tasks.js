@@ -9,6 +9,7 @@ var pg = require('pg');
 //   idleTimeoutMillis: 30000 // 30 second time out
 // };
 // var pool = new pg.Pool(config);
+var pool = require('../modules/pool.js');
 
 router.delete('/:id', function(req, res){
   pool.connect(function(errorConnectingToDatabase, db, done){

@@ -2,7 +2,7 @@ var express = require("express");
 var app = express();
 var path = require("path");
 var bodyParser = require("body-parser");
-var port = 5000;
+var port = process.env.PORT || 5000;
 var pg = require('pg');
 app.use(bodyParser.urlencoded({extended:true}));
 // var config = {
@@ -13,10 +13,10 @@ app.use(bodyParser.urlencoded({extended:true}));
 //   idleTimeoutMillis: 30000 // 30 second time out
 // };
 // var pool = new pg.Pool(config);
-var tasks = require('./routes/tasks.js')
-var pool = require('./modules/pool.js')
+var tasks = require('./routes/tasks.js');
+var pool = require('./modules/pool.js');
 
-app.use(pool);
+//app.use(pool);
 
 app.use('/tasks', tasks);
 
